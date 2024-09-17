@@ -1,38 +1,17 @@
 const express = require('express');
-const Workout = require('../models/Workout');
+// const Workout = require('../models/Workout');
 const router = express.Router();
-
+const { createWorkout, getWorkout, getWorkouts } = require('../controllers/workoutCont');
 
 //GET all workouts
-router.get('/', (req, res) => {
-    res.json({ message: "Welcome to the workouts route" });
-});
+router.get('/', getWorkouts);
 
 //GET a specific workout
 
-router.get('/:id', (req, res) => {
-    res.json({ message: `You requested workout ${req.params.id}` });
-});
+router.get('/:id', getWorkout);
 
 //POST a new workout
-router.post('/', async (req, res) => {
-    const { name, description, duration, date, repetitions, sets, weight } = req.body;
-
-    try {
-        const workout = await Workout.create({
-            name,
-            description,
-            duration,
-            date,
-            repetitions,
-            sets,
-            weight
-        });
-        res.status(200).json(workout);
-    } catch (err) {
-        res.status(400).json({ message: "Error creating workout", error: err });
-    }
-});
+router.post('/', createWorkout);
 
 //PUT (update) a specific workout
 router.patch('/:id', (req, res) => {

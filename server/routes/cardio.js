@@ -1,26 +1,16 @@
 const express = require('express');
 
 const router = express.Router();
-
+const { createCardio, getCardio, getCardios } = require('../controllers/cardioCont');
 
 //GET all cardio
-router.get('/', (req, res) => {
-    res.json({ message: "Welcome to the cardio route" });
-});
+router.get('/', getCardios);
 
 //GET a specific cardio
-router.get('/:id', (req, res) => {
-    res.json({ message: `You requested cardio ${req.params.id}` });
-});
-
+router.get('/:id', getCardio);
 //POST a new cardio
 
-router.post('/', (req, res) => {
-    
-
-    res.json({ message: "You created a new cardio" });
-}
-);
+router.post('/', createCardio);
 
 //PUT (update) a specific cardio
 router.patch('/:id', (req, res) => {
