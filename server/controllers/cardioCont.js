@@ -41,10 +41,44 @@ const createCardio = async (req, res) => {
 
 //PUT (update) a specific cardio
 
+const updateCardio = async (req, res) => {
+    const {id} = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: `No cardio with id: ${id}` });
+    }
+
+    const cardio = await Cardio.findOneAndUpdate({_id: id}, {
+        ...req.body
+    })
+
+    if (!cardio) {
+        return res.status(404).json({ message: `Cardio with id ${id} not found` });
+    }
+
+    res.status(200).json(cardio);
+}
+
 //DELETE a specific cardio
+const deleteCardio = async (req, res) => {
+    const {id} = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: `No cardio with id: ${id}` });
+    }
+    const cardio = await Cardio.findByIdAndRemove({_id: id});
+
+    if (!cardio) {
+        return res.status(404).json({ message: `Cardio with id ${id} not found` });
+    }
+
+    res.json({ message: `Cardio with id ${id} deleted successfully` });
+}
 
 module.exports = {
     getCardios,
     getCardio,
-    createCardio
+    createCardio,
+    updateCardio,
+    deleteCardio
 };

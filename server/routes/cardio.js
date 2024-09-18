@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { createCardio, getCardio, getCardios } = require('../controllers/cardioCont');
+const { createCardio, getCardio, getCardios, updateCardio, deleteCardio } = require('../controllers/cardioCont');
 
 //GET all cardio
 router.get('/', getCardios);
@@ -13,16 +13,9 @@ router.get('/:id', getCardio);
 router.post('/', createCardio);
 
 //PUT (update) a specific cardio
-router.patch('/:id', (req, res) => {
-    res.json({ message: `You updated cardio ${req.params.id}` });
-});
+router.patch('/:id', updateCardio);
 
 //DELETE a specific cardio
-router.delete('/:id', (req, res) => {
-    res.json({ message: `You deleted cardio ${req.params.id}` });
-});
-
-
-
+router.delete('/:id', deleteCardio);
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Workout = require('../models/Workout');
+const mongoose = require('mongoose');
 
 //GET all workouts
 const getWorkouts = async (req, res) => {
@@ -9,7 +10,11 @@ const getWorkouts = async (req, res) => {
 
 //GET a specific workout
 const getWorkout = async (req, res) => {
-    const {id} = rep.params;
+    const {id} = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: `No workout with id: ${id}` });
+    }
 
     const workout = await Workout.findById(id);
 
@@ -39,12 +44,45 @@ const createWorkout = async (req, res) => {
     }
 };
 //PUT (update) a specific workout
+const updateWorkout =async (req,res) => {
+    const {id} = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: `No workout with id: ${id}` });
+    }
+
+    const workout = await Workout.findOneAndUpdate({_id: id}, {
+        ...req.body
+    })
+
+    if (!workout) {
+        return res.status(404).json({ message: `Workout with id ${id} not found` });
+    }
+    res.status(200).json(workout);
+}
+
+
 
 //DELETE a specific workout
+const deleteWorkout = async (req, res) => {
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).json({ message: `No workout with id: ${id}` });
+    }
+    const workout = await Workout.findByIdAndRemove({_id: id});
+
+    if (!workout) {
+        return res.status(404).json({ message: `Workout with id ${id} not found` });
+    }
+    res.json({ message: "Workout deleted successfully." });
+}
 
 
 module.exports = {
     getWorkouts,
     getWorkout,
-    createWorkout
+    createWorkout,
+    deleteWorkout,
+    updateWorkout
 };
