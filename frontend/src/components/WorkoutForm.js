@@ -1,45 +1,43 @@
 import { useState } from 'react';
 
-
 const WorkoutForm = () => {
-
-    const [workout, setWorkout] = useState('');
-    const [duration, setDuration] = useState('');
+    const [name, setName] = useState('');
     const [date, setDate] = useState('');
+    const [duration, setDuration] = useState('');
     const [repetitions, setRepetitions] = useState('');
     const [sets, setSets] = useState('');
     const [weight, setWeight] = useState('');
     const [error, setError] = useState(null);
 
     const handleSubmit = async (e) => {
-        // Prevent the default form submission action
         e.preventDefault();
 
-        const newWorkout = { workout, duration, repetitions, sets, weight };
+        const workout = { name, date, duration, repetitions, sets, weight };
 
         const res = await fetch('/api/workouts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newWorkout)
+            body: JSON.stringify(workout),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
+
         const json = await res.json();
-        
+
         if (!res.ok) {
             setError(json.message);
-        }
-        if (res.ok) {
-            setWorkout('');
+        } else {
+            setName('');
+            setDate('');
             setDuration('');
             setRepetitions('');
             setSets('');
             setWeight('');
-
-
             setError(null);
             console.log("Workout added successfully");
         }
     };
-    
+
     return (
         <form className="create" onSubmit={handleSubmit}>
             <h3>Add a New Workout</h3>
@@ -47,9 +45,8 @@ const WorkoutForm = () => {
             <label>Workout Name:</label>
             <input 
                 type="text"
-                
-                value={workout}
-                onChange={(e) => setWorkout(e.target.value)}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
             />
 
             <label>Date:</label>
@@ -59,10 +56,9 @@ const WorkoutForm = () => {
                 onChange={(e) => setDate(e.target.value)}
             />
 
-            <label>Duration:</label>
+            <label>Duration (minutes):</label>
             <input 
                 type="number"
-                
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
             />
@@ -70,27 +66,28 @@ const WorkoutForm = () => {
             <label>Repetitions:</label>
             <input 
                 type="number"
-                
                 value={repetitions}
                 onChange={(e) => setRepetitions(e.target.value)}
             />
+
             <label>Sets:</label>
             <input 
                 type="number"
-                
                 value={sets}
                 onChange={(e) => setSets(e.target.value)}
             />
+
             <label>Weight (lbs):</label>
             <input 
                 type="number"
-                
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
             />
+
+            <button>Add Workout</button>
+            {error && <div className="error">{error}</div>}
         </form>
     );
 };
-
 
 export default WorkoutForm;
