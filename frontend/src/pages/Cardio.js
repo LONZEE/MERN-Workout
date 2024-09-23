@@ -18,8 +18,8 @@ const Cardio = () => {
     }, []);
 
     return (
-        <div className="cardio">
-        <div className="cardio">
+        <div className="home">
+        <div className="workouts">
             {cardio && cardio.map((cardio) => (
                 <CardioDetails key={cardio._id} cardio={cardio} />
 
