@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 //pages & components
 import Home from './pages/Home';
+import Cardio from './pages/Cardio';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
 
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/cardio" element={<Cardio />} />
 
           </Routes>
 
