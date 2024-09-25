@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
+import { set } from 'mongoose';
 
 
 const WorkoutForm = () => {
@@ -12,6 +13,7 @@ const WorkoutForm = () => {
     const [sets, setSets] = useState('');
     const [weight, setWeight] = useState('');
     const [error, setError] = useState(null);
+    const [emptyFields, setEmptyFields] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,6 +32,7 @@ const WorkoutForm = () => {
 
         if (!res.ok) {
             setError(json.message);
+            setEmptyFields(json.emptyFields || []);
         } else {
             setName('');
             setDate('');
@@ -38,6 +41,7 @@ const WorkoutForm = () => {
             setSets('');
             setWeight('');
             setError(null);
+            setEmptyFields([]);
             console.log("Workout added successfully");
             dispatch({ type: 'CREATE_WORKOUT', payload: json });
         }
@@ -52,6 +56,7 @@ const WorkoutForm = () => {
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                className={emptyFields.includes('name') ? 'error' : ''}
             />
 
             <label>Date:</label>
@@ -59,6 +64,7 @@ const WorkoutForm = () => {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
+                className={emptyFields.includes('date') ? 'error' : ''}
             />
 
             <label>Duration (minutes):</label>
@@ -66,6 +72,7 @@ const WorkoutForm = () => {
                 type="number"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
+                className={emptyFields.includes('duration') ? 'error' : ''}
             />
 
             <label>Repetitions:</label>
@@ -73,6 +80,7 @@ const WorkoutForm = () => {
                 type="number"
                 value={repetitions}
                 onChange={(e) => setRepetitions(e.target.value)}
+                className={emptyFields.includes('repetitions') ? 'error' : ''}
             />
 
             <label>Sets:</label>
@@ -80,6 +88,7 @@ const WorkoutForm = () => {
                 type="number"
                 value={sets}
                 onChange={(e) => setSets(e.target.value)}
+                className={emptyFields.includes('sets') ? 'error' : ''}
             />
 
             <label>Weight (lbs):</label>
@@ -87,10 +96,11 @@ const WorkoutForm = () => {
                 type="number"
                 value={weight}
                 onChange={(e) => setWeight(e.target.value)}
+                className={emptyFields.includes('weight') ? 'error' : ''}
             />
 
             <button>Add Workout</button>
-            {error && <div className="error">{error}</div>}
+            {error && <div className='error'>{error}</div>}
         </form>
     );
 };

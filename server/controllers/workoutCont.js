@@ -27,6 +27,35 @@ const getWorkout = async (req, res) => {
 //POST a new workout
 const createWorkout = async (req, res) => {
     const { name, description, duration, date, repetitions, sets, weight } = req.body;
+    
+    let emptyFields = [];
+
+    if (!name) {
+        emptyFields.push('name');
+    }
+    if (!description) {
+        emptyFields.push('description');
+    }
+    if (!duration) {
+        emptyFields.push('duration');
+    }
+    if (!date) {
+        emptyFields.push('date');
+    }
+    if (!repetitions) {
+        emptyFields.push('repetitions');
+    }
+    if (!sets) {
+        emptyFields.push('sets');
+    }
+    if (!weight) {
+        emptyFields.push('weight');
+    }
+    if (emptyFields.length > 0) {
+        return res.status(400).json({ message: `The following fields are required: ${emptyFields.join(', ')}` });
+    }
+
+
 // add documentation to db  
     try {
         const workout = await Workout.create({
@@ -70,7 +99,7 @@ const deleteWorkout = async (req, res) => {
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(404).json({ message: `No workout with id: ${id}` });
     }
-    const workout = await Workout.findByIdAndRemove({_id: id});
+    const workout = await Workout.findByIdAndDelete({_id: id});
 
     if (!workout) {
         return res.status(404).json({ message: `Workout with id ${id} not found` });
